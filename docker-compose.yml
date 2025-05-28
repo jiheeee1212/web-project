@@ -7,6 +7,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules # node_modules는 컨테이너 내부 것 유지
+      - ./uploads:/app/uploads
     depends_on:
       - mongo
     command: npm run dev

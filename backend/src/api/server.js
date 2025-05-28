@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/posts');
+const path = require('path');
 
 const app = express();
 const PORT = 5000;
@@ -28,6 +29,7 @@ app.use(
 
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/uploads', express.static('/app/uploads'));
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

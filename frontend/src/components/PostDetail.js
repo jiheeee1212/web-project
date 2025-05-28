@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import Comments from '../components/Comments';
+
 
 function PostDetail() {
   const { id } = useParams();
@@ -24,6 +26,30 @@ function PostDetail() {
     }
   };
 
+
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get(`/api/posts/${post._id}/download`, {
+        responseType: 'blob',
+      });
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = post.file;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert('파일 다운로드 실패');
+      console.error('다운로드 에러 응답:', error.response?.data || error.message);
+    }
+  };
+
+
   if (!post) return <div>로딩 중...</div>;
 
   return (
@@ -31,8 +57,16 @@ function PostDetail() {
       <h2>{post.title}</h2>
       <p>작성자: {post.author}</p>
       <p>{post.content}</p>
+
+      {post.file && (
+          <button onClick={handleDownload}>
+            파일 다운로드
+          </button>
+       )}
+
       <button onClick={() => navigate(`/posts/${id}/edit`)}>수정</button>
       <button onClick={handleDelete}>삭제</button>
+      <Comments postId={post._id} initialComments={post.comments} />
     </div>
   );
 }

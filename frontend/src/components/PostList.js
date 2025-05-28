@@ -6,6 +6,7 @@ function PostList() {
   const [posts, setPosts] = useState([]);
   const [q, setQ] = useState('');
 
+  useEffect(() => {
   const fetchPosts = async () => {
     try {
       const res = await axios.get('/api/posts', { params: { q } });
@@ -14,10 +15,21 @@ function PostList() {
       alert('게시글 불러오기 실패');
     }
   };
+  fetchPosts();
+}, [q]);
 
   useEffect(() => {
-    fetchPosts();
-  }, [q]);
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get('/api/posts', { params: { q } });
+      setPosts(res.data);
+    } catch {
+      alert('게시글 불러오기 실패');
+    }
+  };
+  fetchPosts();
+}, [q]);
+
 
   return (
     <div>

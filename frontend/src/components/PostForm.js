@@ -6,11 +6,18 @@ function PostForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({ title: '', content: '', author: '' });
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     if (id) {
       axios.get(`/api/posts/${id}`)
-        .then(res => setForm(res.data))
+        .then(res => {
+          setForm({
+            title: res.data.title,
+            content: res.data.content,
+            author: res.data.author,
+          });
+        })
         .catch(() => alert('게시글을 불러올 수 없습니다.'));
     }
   }, [id]);
@@ -19,26 +26,42 @@ function PostForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = e => {
+    setFile(e.target.files[0]);
+  };
+
   const handleSubmit = async e => {
   e.preventDefault();
   try {
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('content', form.content);
+    formData.append('author', form.author);
+    if (file) {
+      formData.append('file', file);  // ← 여기 수정
+    }
+
+    const config = {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    };
+
     if (id) {
-      await axios.put(`/api/posts/${id}`, form);
+      await axios.put(`/api/posts/${id}`, formData, config);
       alert('게시글 수정 완료');
     } else {
-      await axios.post('/api/posts', form);
+      await axios.post('/api/posts', formData, config);
       alert('게시글 작성 완료');
     }
     navigate('/');
   } catch (err) {
-    console.error(err.response || err);  // 에러 내용을 콘솔에 출력
+    console.error(err.response || err);
     alert(err.response?.data?.message || '실패했습니다.');
   }
 };
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
       <input
         name="author"
         placeholder="작성자"
@@ -59,6 +82,12 @@ function PostForm() {
         value={form.content}
         onChange={handleChange}
         required
+      />
+      <input
+        type="file"
+        name="file"
+        onChange={handleFileChange}
+        accept=".jpg,.jpeg,.png,.pdf,.txt,.docx"
       />
       <button type="submit">{id ? '수정' : '작성'}</button>
     </form>
