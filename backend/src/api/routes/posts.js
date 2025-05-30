@@ -1,12 +1,12 @@
 const express = require('express');
 const Post = require('../models/Post');
+const User = require('../models/User');
 console.log('Post 모델:', Post);
 const router = express.Router();
-
+const { isAuthenticated } = require('../middlewares/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
 
 
 // 업로드 디렉토리 없으면 생성
@@ -55,31 +55,28 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// 게시글 작성
-// router.post('/', async (req, res) => {
-//   try {
-//     console.log('폼 데이터:', req.body); // 이거 추가
-//     const { title, content, author } = req.body;
-//     const newPost = new Post({ title, content, author });
-//     console.log('폼 데이터2:', req.body); // 이거 추가
-//     await newPost.save();
-//     res.status(201).json({ message: '게시글 작성 성공', post: newPost });
-//   } catch (err) {
-//     console.error('게시글 작성 실패:', err); // 이게 있어야 함
-//     console.log('Post 모델:', Post);
-//     res.status(500).json({ message: '게시글 작성 실패' });
-//   }
-// });
-
-
-router.post('/', upload.single('file'), async (req, res) => {
+//게시글 작성
+router.post('/', isAuthenticated, upload.single('file'), async (req, res) => {
   try {
     console.log('폼 데이터:', req.body);
-    const { title, content, author } = req.body;
+    
+    const userId = req.session.userId;  // 세션에서 userId 가져오기
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    const { title, content } = req.body;
     const file = req.file ? req.file.filename : null;
+    const author = user.username;
 
     const newPost = new Post({ title, content, author, file });
     await newPost.save();
+
     res.status(201).json({ message: '게시글 작성 성공', post: newPost });
   } catch (err) {
     console.error('게시글 작성 실패:', err);
@@ -89,28 +86,54 @@ router.post('/', upload.single('file'), async (req, res) => {
 
 
 // 게시글 수정
-router.put('/:id', async (req, res) => {
+router.put('/:id', isAuthenticated, async (req, res) => {
   try {
+    const userId = req.session.userId;
+    if (!userId) return res.status(401).json({ message: '로그인이 필요합니다.' });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+
+    // 작성자 검증 (username이 아니라 userId로 비교하는 게 더 안전)
+    const user = await User.findOne({ username: post.author });
+    if (!user || user._id.toString() !== userId) {
+      return res.status(403).json({ message: '수정 권한이 없습니다.' });
+    }
+
+    // 수정할 내용
     const { title, content } = req.body;
-    const updatedPost = await Post.findByIdAndUpdate(
-      req.params.id,
-      { title, content, updatedAt: Date.now() },
-      { new: true }
-    );
-    if (!updatedPost) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-    res.json({ message: '게시글 수정 성공', post: updatedPost });
+    post.title = title ?? post.title;
+    post.content = content ?? post.content;
+
+    await post.save();
+
+    res.json({ message: '게시글 수정 성공', post });
   } catch (err) {
+    console.error('게시글 수정 실패:', err);
     res.status(500).json({ message: '게시글 수정 실패' });
   }
 });
 
+
 // 게시글 삭제
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAuthenticated, async (req, res) => {
   try {
-    const deletedPost = await Post.findByIdAndDelete(req.params.id);
-    if (!deletedPost) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+    const userId = req.session.userId;
+    if (!userId) return res.status(401).json({ message: '로그인이 필요합니다.' });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+
+    const user = await User.findOne({ username: post.author });
+    if (!user || user._id.toString() !== userId) {
+      return res.status(403).json({ message: '삭제 권한이 없습니다.' });
+    }
+
+    await post.remove();
+
     res.json({ message: '게시글 삭제 성공' });
   } catch (err) {
+    console.error('게시글 삭제 실패:', err);
     res.status(500).json({ message: '게시글 삭제 실패' });
   }
 });
@@ -150,37 +173,52 @@ router.get('/:id/download', async (req, res) => {
 
 
 // 댓글 작성
-router.post('/:id/comments', async (req, res) => {
+
+router.post('/:postId/comments', async (req, res) => {
   try {
-    const { author, content } = req.body;
-    const post = await Post.findById(req.params.id);
+    const { content } = req.body;
+    const userId = req.session.userId;
+    const user = await User.findById(userId); // 유저 정보 (author name 출력용)
+
+    const post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).send('게시글이 없습니다.');
 
-    post.comments.push({ author, content });
-    await post.save();
+    post.comments.push({
+      content,
+      author: user.username,
+      authorId: user._id
+    });
 
-    res.status(201).json(post.comments);
+    await post.save();
+    res.json(post.comments);
   } catch (err) {
     res.status(500).send('서버 오류');
   }
 });
 
+
 // 댓글 수정
 router.put('/:postId/comments/:commentId', async (req, res) => {
   try {
-    const { author, content } = req.body;
+    const { content } = req.body;
+    const userId = req.session.userId;
+
     const post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).send('게시글이 없습니다.');
 
     const comment = post.comments.id(req.params.commentId);
     if (!comment) return res.status(404).send('댓글이 없습니다.');
 
-    comment.author = author;
+    if (comment.authorId?.toString() !== userId) {
+      return res.status(403).send('수정 권한이 없습니다.');
+    }
+
     comment.content = content;
     await post.save();
 
     res.json(comment);
   } catch (err) {
+    console.error(err);
     res.status(500).send('서버 오류');
   }
 });
@@ -188,16 +226,19 @@ router.put('/:postId/comments/:commentId', async (req, res) => {
 // 댓글 삭제
 router.delete('/:postId/comments/:commentId', async (req, res) => {
   try {
+    const userId = req.session.userId;
+
     const post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).send('게시글이 없습니다.');
 
-    const commentIndex = post.comments.findIndex(
-      c => c._id.toString() === req.params.commentId
-    );
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).send('댓글이 없습니다.');
 
-    if (commentIndex === -1) return res.status(404).send('댓글이 없습니다.');
+    if (comment.authorId?.toString() !== userId) {
+      return res.status(403).send('삭제 권한이 없습니다.');
+    }
 
-    post.comments.splice(commentIndex, 1); // 배열에서 제거
+    comment.deleteOne();
     await post.save();
 
     res.send('삭제 완료');
@@ -206,6 +247,7 @@ router.delete('/:postId/comments/:commentId', async (req, res) => {
     res.status(500).send('서버 오류');
   }
 });
+
 
 
 

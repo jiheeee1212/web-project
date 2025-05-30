@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import '../styles/PostForm.css'; 
 
 function PostForm() {
   const { id } = useParams();
@@ -61,36 +62,37 @@ function PostForm() {
 
 
   return (
-    <form onSubmit={handleSubmit} encType="multipart/form-data">
-      <input
-        name="author"
-        placeholder="작성자"
-        value={form.author}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="title"
-        placeholder="제목"
-        value={form.title}
-        onChange={handleChange}
-        required
-      />
-      <textarea
-        name="content"
-        placeholder="내용"
-        value={form.content}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="file"
-        name="file"
-        onChange={handleFileChange}
-        accept=".jpg,.jpeg,.png,.pdf,.txt,.docx"
-      />
-      <button type="submit">{id ? '수정' : '작성'}</button>
-    </form>
+    <div className="post-form-page">
+      <form
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        className="post-form-container"
+      >
+        <input
+          name="title"
+          placeholder="제목"
+          value={form.title}
+          onChange={handleChange}
+          required
+          type="text"
+        />
+        <textarea
+          name="content"
+          placeholder="내용"
+          value={form.content}
+          onChange={handleChange}
+          required
+          rows={8}
+        />
+        <input
+          type="file"
+          name="file"
+          onChange={handleFileChange}
+          accept=".jpg,.jpeg,.png,.pdf,.txt,.docx"
+        />
+        <button type="submit">{id ? '수정' : '작성'}</button>
+      </form>
+    </div>
   );
 }
 

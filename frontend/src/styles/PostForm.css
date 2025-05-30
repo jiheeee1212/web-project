@@ -1,0 +1,43 @@
+/* PostForm.css */
+.post-form-page {
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  padding: 40px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.post-form-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: #fff;
+  color: #111;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+.post-form-container input[type="text"],
+.post-form-container textarea,
+.post-form-container input[type="file"] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.post-form-container button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.post-form-container button:hover {
+  background-color: #388e3c;
+}

@@ -1,0 +1,89 @@
+/* 회원가입 전체 페이지 컨테이너 (배경 포함) */
+.signup-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000; /* 로그인 페이지와 같은 배경 */
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 기존 .auth-form 유지하되 margin-top 제거 */
+.auth-form {
+  max-width: 400px;
+  padding: 30px 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  /* margin-top: 60px; ← 제거 */
+  margin: 0 auto; /* 중앙 정렬 유지 */
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  color: #333;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.auth-form input[type="password"] {
+  margin-bottom: 15px;
+}
+
+.auth-form button {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.auth-form button:hover {
+  background-color: #45a049;
+}
+
+.form-group button[type="button"] {
+  width: auto;
+  padding: 8px 10px;
+  background-color: #2196F3;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-group button[type="button"]:hover {
+  background-color: #1976D2;
+}
+
+.check-msg {
+  font-size: 13px;
+  color: #ff5722;
+  margin-top: 5px;
+  margin-left: 2px;
+}

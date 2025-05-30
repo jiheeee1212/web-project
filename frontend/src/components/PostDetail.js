@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Comments from '../components/Comments';
-
+import { Link } from 'react-router-dom';
+import '../styles/PostDetail.css';
 
 function PostDetail() {
   const { id } = useParams();
@@ -53,20 +54,25 @@ function PostDetail() {
   if (!post) return <div>로딩 중...</div>;
 
   return (
-    <div>
-      <h2>{post.title}</h2>
-      <p>작성자: {post.author}</p>
-      <p>{post.content}</p>
+    <div className="post-detail-page">
+      <div className="post-detail-container">
+        <h2>{post.title}</h2>
+        <p>작성자: {post.author}</p>
+        <p>{post.content}</p>
 
-      {post.file && (
-          <button onClick={handleDownload}>
-            파일 다운로드
-          </button>
-       )}
+        {post.file && (
+          <button onClick={handleDownload}>파일 다운로드</button>
+        )}
 
-      <button onClick={() => navigate(`/posts/${id}/edit`)}>수정</button>
-      <button onClick={handleDelete}>삭제</button>
-      <Comments postId={post._id} initialComments={post.comments} />
+        <button onClick={() => navigate(`/posts/${id}/edit`)}>수정</button>
+        <button onClick={handleDelete}>삭제</button>
+
+        <Comments postId={post._id} initialComments={post.comments} />
+
+         <Link to="/posts">
+        <button>목록</button>
+      </Link>
+      </div>
     </div>
   );
 }

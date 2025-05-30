@@ -1,0 +1,45 @@
+/* PostDetail.css */
+.post-detail-page {
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  padding: 40px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.post-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  color: #111;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+.post-detail-container h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.post-detail-container p {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.post-detail-container button {
+  margin-right: 10px;
+  background-color: #2196f3;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.post-detail-container button:hover {
+  background-color: #1565c0;
+}

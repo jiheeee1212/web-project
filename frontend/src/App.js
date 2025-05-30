@@ -9,21 +9,11 @@ import PostDetail from './components/PostDetail';
 import PostForm from './components/PostForm';
 
 
-
 function App() {
   return (
     <Router>
-      <nav>
-        <ul>
-          <li><Link to="/">메인</Link></li>
-          <li><Link to="/login">로그인</Link></li>
-          <li><Link to="/signup">회원가입</Link></li>
-          <li><Link to="/posts">게시판</Link></li>
-        </ul>
-      </nav>
-
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/posts/:id" element={<PostDetail />} />

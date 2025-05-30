@@ -3,6 +3,23 @@ const User = require('../models/User');
 
 const router = express.Router();
 
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.userId) {
+    return next(); // 로그인 상태면 다음으로 진행
+  }
+  return res.status(401).json({ message: '로그인이 필요합니다.' });
+}
+
+// 아이디 중복 체크
+router.get('/check-username', async (req, res) => {
+  try {
+    const { username } = req.query;
+    const exists = await User.findOne({ username });
+    res.json({ available: !exists });
+  } catch (err) {
+    res.status(500).json({ message: '중복 검사 실패' });
+  }
+});
 
 //회원가입
 router.post('/register', async (req, res) => {
@@ -12,7 +29,7 @@ router.post('/register', async (req, res) => {
   try {
     const existing = await User.findOne({ username });
     if (existing) {
-      console.log('이미 존재하는 사용자입니다.');
+      //console.log('이미 존재하는 사용자입니다.');
       return res.status(400).json({ message: '이미 존재하는 사용자입니다.' });
     }
 
@@ -51,4 +68,4 @@ router.post('/logout', (req, res) => {
   });
 });
 
-module.exports = router;
+module.exports = router; 

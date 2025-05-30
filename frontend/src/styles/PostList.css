@@ -1,0 +1,74 @@
+/* PostList.css */
+
+.post-list-page {
+  min-height: 100vh;
+  background-color: #000; /* 검정 배경 */
+  color: #fff;
+  padding: 40px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.post-list-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  color: #111;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+}
+
+.post-list-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.post-list-container input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.post-list-container button {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.post-list-container button:hover {
+  background-color: #1976d2;
+}
+
+.post-list-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list-container li {
+  margin-bottom: 15px;
+  font-size: 1.05rem;
+}
+
+.post-list-container a {
+  color: #2196f3;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.post-list-container a:hover {
+  text-decoration: underline;
+}
+
+
+.post-list-container button {
+  margin-left: 10px;
+}

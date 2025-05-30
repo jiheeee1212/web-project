@@ -1,43 +1,95 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import '../styles/RegisterForm.css';
 
 function RegisterForm() {
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const checkUsername = async () => {
     try {
-      const res = await axios.post('/api/auth/register', form);
-      alert(res.data.message);
+      const res = await fetch(`/api/auth/check-username?username=${username}`);
+      const data = await res.json();
+      if (data.available) {
+        setIsUsernameAvailable(true);
+        setError('사용 가능한 아이디입니다.');
+      } else {
+        setIsUsernameAvailable(false);
+        setError('이미 사용 중인 아이디입니다.');
+      }
     } catch (err) {
-      alert(err.response?.data?.message || '회원가입 실패');
+      setError('중복 검사 실패');
+      setIsUsernameAvailable(null);
     }
   };
-  
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+      if (password !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || '회원가입 실패');
+      } else {
+        alert('회원가입 성공!');
+        window.location.href = '/login';
+      }
+    } catch (err) {
+      setError('서버 오류');
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name="username"
-        value={form.username}
-        onChange={handleChange}
-        placeholder="아이디"
-        required
-      />
-      <input
-        name="password"
-        type="password"
-        value={form.password}
-        onChange={handleChange}
-        placeholder="비밀번호"
-        required
-      />
-      <button type="submit">회원가입</button>
-    </form>
+    <div className="auth-form">
+      <form onSubmit={handleSubmit}>
+        <h2>회원가입</h2>
+
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="아이디"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            onBlur={checkUsername}
+          />
+          <button type="button" onClick={checkUsername}>중복 확인</button>
+        </div>
+
+        
+
+        <input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="비밀번호 확인"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+
+        <button type="submit">가입하기</button>
+
+        {isUsernameAvailable === false && <p className="check-msg">이미 사용 중인 아이디입니다.</p>}
+        {isUsernameAvailable === true && <p className="check-msg">사용 가능한 아이디입니다.</p>}
+      </form>
+    </div>
   );
 }
 

@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
-  author: String,
   content: String,
-  createdAt: { type: Date, default: Date.now },
+  author: String,
+  authorId: mongoose.Schema.Types.ObjectId,
+  createdAt: { type: Date, default: Date.now }
 });
+
 
 const postSchema = new mongoose.Schema({
   title: { type: String, required: true },

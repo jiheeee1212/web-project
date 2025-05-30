@@ -1,12 +1,13 @@
-// frontend/src/pages/SignupPage.js
 import React from 'react';
 import RegisterForm from '../components/RegisterForm';
+import '../styles/RegisterForm.css';
 
 function SignupPage() {
   return (
-    <div>
-      <h2>회원가입</h2>
-      <RegisterForm />
+  <div className="signup-page">
+    
+        <RegisterForm />
+       
     </div>
   );
 }
