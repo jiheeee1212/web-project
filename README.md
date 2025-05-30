@@ -22,6 +22,7 @@ cd web-project
 docker-compose up --build  
 ```
 ## 종료
+```
 docker-compose down 
-
+```
 
