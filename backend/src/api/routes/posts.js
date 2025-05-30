@@ -86,7 +86,7 @@ router.post('/', isAuthenticated, upload.single('file'), async (req, res) => {
 
 
 // 게시글 수정
-router.put('/:id', isAuthenticated, async (req, res) => {
+router.put('/:id', isAuthenticated, upload.none(), async (req, res) => {
   try {
     const userId = req.session.userId;
     if (!userId) return res.status(401).json({ message: '로그인이 필요합니다.' });
@@ -94,13 +94,13 @@ router.put('/:id', isAuthenticated, async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
 
-    // 작성자 검증 (username이 아니라 userId로 비교하는 게 더 안전)
+    // 작성자 검증
     const user = await User.findOne({ username: post.author });
     if (!user || user._id.toString() !== userId) {
       return res.status(403).json({ message: '수정 권한이 없습니다.' });
     }
 
-    // 수정할 내용
+    // 수정할 내용 추출
     const { title, content } = req.body;
     post.title = title ?? post.title;
     post.content = content ?? post.content;
@@ -113,6 +113,7 @@ router.put('/:id', isAuthenticated, async (req, res) => {
     res.status(500).json({ message: '게시글 수정 실패' });
   }
 });
+
 
 
 // 게시글 삭제

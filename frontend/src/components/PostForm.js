@@ -49,9 +49,11 @@ function PostForm() {
     if (id) {
       await axios.put(`/api/posts/${id}`, formData, config);
       alert('게시글 수정 완료');
+      window.location.href = '/posts';
     } else {
       await axios.post('/api/posts', formData, config);
       alert('게시글 작성 완료');
+      window.location.href = '/posts';
     }
     navigate('/');
   } catch (err) {
