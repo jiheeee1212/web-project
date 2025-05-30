@@ -40,6 +40,7 @@ docker-compose down
 ---
 
 ## 📁 프로젝트 구조
+```
 web-project/  
 ├── backend/                    # Express 서버 및 API, DB 모델, 미들웨어 등  
 │   ├── src/  
@@ -60,7 +61,7 @@ web-project/
 ├── docker-compose.yml          # 도커 컴포즈 설정 파일  
 ├── Dockerfile                  # 백엔드, 프론트엔드 Dockerfile  
 └── README.md                   # 프로젝트 설명 파일  
-  
+```
 
 
 
