@@ -130,7 +130,8 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
       return res.status(403).json({ message: '삭제 권한이 없습니다.' });
     }
 
-    await post.remove();
+    await post.deleteOne(); 
+
 
     res.json({ message: '게시글 삭제 성공' });
   } catch (err) {
