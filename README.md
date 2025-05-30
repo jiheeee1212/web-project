@@ -1,7 +1,8 @@
 # 게시판 웹 어플리케이션 개발
 ---
 # 개발 환경
-Node.js + Express
+Node.js + Express  
+
 MongoDB (mongoose ODM)
 React 
 CSS 
