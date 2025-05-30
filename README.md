@@ -56,8 +56,7 @@ web-project/
 │   │   ├── components/         # 재사용 UI 컴포넌트  
 │   │   ├── pages/              # 로그인, 메인 등 페이지 컴포넌트  
 │   │   └── styles/             # CSS 스타일 파일  
-│  
-├── uploads/                    # 루트 경로에 있는 업로드 디렉터리 (이미지 등)  
+│   
 ├── docker-compose.yml          # 도커 컴포즈 설정 파일  
 ├── Dockerfile                  # 백엔드, 프론트엔드 Dockerfile  
 └── README.md                   # 프로젝트 설명 파일  
