@@ -18,7 +18,7 @@ cd web-project
 
 docker-compose up --build  
 
-## 종료 (볼륨까지 제거)
-docker-compose down -v
+## 종료
+docker-compose down 
 
 
