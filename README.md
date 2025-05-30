@@ -52,38 +52,27 @@ web-project/
 
 │   │   │   ├── models/          # User, Post 모델 정의  
 
-
 │   │   │   ├── routes/          # auth, posts API 라우터  
-
 
 │   │   │   └── server.js        # 백엔드 서버 진입점  
 
-
 │   └── uploads/                 # 업로드 파일 저장소  
-
 
 │
 ├── frontend/              # React 프론트엔드  
 
-
 │   ├── src/  
-
 
 │   │   ├── components/        # 재사용 UI 컴포넌트  
 
-
 │   │   ├── pages/             # 로그인, 메인 등 페이지 컴포넌트  
 
-
 │   │   └── styles/            # CSS 스타일 파일  
-
 
 │
 ├── docker-compose.yml     # 도커 컴포즈 설정 파일  
 
-
 ├── Dockerfile             # 백엔드, 프론트엔드 Dockerfile  
-
 
 └── README.md              # 프로젝트 설명 파일  
 
