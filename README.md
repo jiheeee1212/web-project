@@ -27,12 +27,12 @@ docker-compose up --build
 
 ---
 
-## 접속 주소
+## 🔗 접속 주소
 http://localhost:3000
 
 ---
 
-## 종료
+## 🔚 종료
 ```
 docker-compose down 
 ```
